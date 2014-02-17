@@ -26,8 +26,8 @@
  * The content is modified using a custom WebGL shader program.
  */
 function WebGLVideoTest(canvas, video) {
-    this.canvas = canvas;
-    this.video = video;
+    this.canvasElement = canvas;
+    this.videoElement = video;
 }
 
 /**
@@ -45,7 +45,7 @@ WebGLVideoTest.prototype.start = function() {
  * Create the GL context from the canvas element
  */
 WebGLVideoTest.prototype.initGlContext = function() {
-    var canvas = this.canvas;
+    var canvas = this.canvasElement;
     var gl;
 
     try {
@@ -54,14 +54,14 @@ WebGLVideoTest.prototype.initGlContext = function() {
         alert('Couldn\'t create gl context, sorry :(', e);
     }
 
-    this.gl = gl;
+    this.glContext = gl;
 }
 
 /**
  * Initialize GL shader program
  */
 WebGLVideoTest.prototype.initProgram = function() {
-    var gl = this.gl;
+    var gl = this.glContext;
 
     var vertexShaderScript = [
         'attribute vec4 vertexPos;',
@@ -111,15 +111,15 @@ WebGLVideoTest.prototype.initProgram = function() {
 
     gl.useProgram(program);
     
-    this.program = program;
+    this.shaderProgram = program;
 }
 
 /**
  * Initialize vertex buffers and attach to shader program
  */
 WebGLVideoTest.prototype.initBuffers = function() {
-    var gl = this.gl;
-    var program = this.program;
+    var gl = this.glContext;
+    var program = this.shaderProgram;
 
     var vertexPosBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexPosBuffer);
@@ -142,8 +142,8 @@ WebGLVideoTest.prototype.initBuffers = function() {
  * Initialize GL textures and attach to shader program
  */
 WebGLVideoTest.prototype.initTextures = function() {
-    var gl = this.gl;
-    var program = this.program;
+    var gl = this.glContext;
+    var program = this.shaderProgram;
 
     var videoTextureRef = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, videoTextureRef);
@@ -163,10 +163,10 @@ WebGLVideoTest.prototype.initTextures = function() {
  * Setup GL viewport and start the render loop
  */
 WebGLVideoTest.prototype.startDrawing = function() {
-    var gl = this.gl;
-    var program = this.program;
-    var canvas = this.canvas;
-    var video = this.video;
+    var gl = this.glContext;
+    var program = this.shaderProgram;
+    var canvas = this.canvasElement;
+    var video = this.videoElement;
     var videoTextureRef = this.videoTextureRef;
 
     // You can only capture from playing video
@@ -203,14 +203,14 @@ WebGLVideoTest.prototype.startDrawing = function() {
  * Grabs video from the local video camera and displays it in the video element.
  */
 function UserMediaHelper(video) {
-    this.video = video;
+    this.videoElement = video;
 }
 
 /**
  * Grab a video feed and attach it to the video element
  */
 UserMediaHelper.prototype.start = function() {
-    var video = this.video;
+    var video = this.videoElement;
 
     var mediaConstraints = {video: true, audio: false};
 
