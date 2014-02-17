@@ -1,0 +1,29 @@
+<html>
+<script src='webgl_video_test.js'></script>
+
+<script>
+    window.onload = function() {
+        // Video element used to capture the video.
+        var video = document.getElementById('camera-video');
+
+        // Canvas elemnt that's used to render WebGL.
+        var canvas = document.getElementById('webgl-canvas');
+
+        // Attach camera to the video element
+        var userMedia = new UserMediaHelper(video);
+        userMedia.start();
+
+        // Start WebGL
+        var webGLVideoTest = new WebGLVideoTest(canvas, video);
+        webGLVideoTest.start();
+    }
+</script>
+
+<body>
+    <p>This is a study to figure out how to get video into a WebGL context
+        and modify it using custom shaders.</p>
+
+    <canvas id="webgl-canvas"></canvas>
+    <video id="camera-video" style="display: none" autoplay="true"></video>
+</body>
+</html>
